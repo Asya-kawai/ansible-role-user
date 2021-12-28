@@ -46,7 +46,7 @@ centos ansible_host=10.10.10.11 ansible_port=22
 become: yes
 ansible_user: root
 
-# Private_key is saved local host only!
+# Private_key is saved in local host only!
 ansible_ssh_private_key_file: ""
 ```
 
