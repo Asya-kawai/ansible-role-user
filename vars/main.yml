@@ -1,0 +1,2 @@
+opam_suffix: "{{ opam_platform }}-{{ opam_os }}"
+opam_bin: "opam-{{ opam_ver }}-{{ opam_suffix }}"

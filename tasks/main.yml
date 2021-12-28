@@ -1,0 +1,34 @@
+# Reference: https://gitkado.hatenadiary.jp/entry/20190131/1548864167
+- name: Configure users
+  include: user.yml
+  with_items: "{{ users }}"
+  loop_control:
+    loop_var: user
+  tags:
+    - usersetting
+
+- name: Update OS packages
+  package:
+    name: '*'
+    state: latest
+  tags:
+    - package 
+
+- name: Install OS packages
+  package:
+    name:
+      - git
+      - wget
+      - curl
+      - zsh
+    state: present
+  tags:
+    - package
+
+- name: Install basic packages for local user
+  include: package.yml
+  with_items: "{{ users }}"
+  loop_control:
+    loop_var: user
+  tags:
+    - package

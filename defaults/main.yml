@@ -1,0 +1,16 @@
+users:
+  - name: "user"
+    groups:
+      - "sudo"
+      - "wheel"
+    password: "Th1sIsRand0mPassWord!"
+
+# OCaml
+opam_mirror: https://github.com/ocaml/opam/releases/download/
+opam_ver: 2.1.1
+opam_ocaml_ver: 4.12.0
+opam_platform: x86_64
+opam_os: linux
+
+opam_init: true
+
