@@ -10,10 +10,6 @@ Directory tree.
 .
 ├── README.md
 ├── ansible.cfg
-├── authorized_keys
-│   └── aintek
-│        └── centos
-│        └── ubuntu
 ├── group_vars
 │   ├── all.yml
 │   ├── webserver_centos.yml
@@ -21,7 +17,6 @@ Directory tree.
 ├── inventory
 └── webservers.yml
 ```
-
 
 ## Inventory file
 
@@ -79,13 +74,6 @@ users:
       - wheel
     password: 'ThisIsSecret!'
 ```
-
-## Authorized_keys
-
-This role copy `authorized_keys` in `./authorized_keys/{{ user.name }}/{{ inventory_hostname }}`.
-
-So when you want to apply this role to `ubuntu` and `centos` for `aintek` user(you want to create aintek's authorized_keys),
-you should make `./authorized_kyes/aintek/ubuntu` and `./authorized_kyes/aintek/centos`.
 
 ## Playbook / Webservers(webservers.yml)
 

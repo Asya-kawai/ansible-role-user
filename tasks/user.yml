@@ -18,37 +18,6 @@
   tags:
     - usersetting
 
-- name: Create a ssh directory
-  file:
-    path: "/home/{{ user.name }}/.ssh"
-    state: directory
-    owner: "{{ user.name }}"
-    group: "{{ user.name }}"
-    mode: 0700
-  when: create_users_result is succeeded
-  register: create_ssh_dir_result
-  tags:
-    - usersetting
-
-- name: Check the ssh directory exists
-  stat:
-    path: "/home/{{ user.name }}/.ssh"
-  register: ssh_dir
-  tags:
-    - usersetting
-
-# When use it, you should create a directory of authorized_keys/{{ user.name }}/ and
-# put public keys into authorized_keys/{{ user.name }}/{{ inventory_hostname }}.
-- name: Setup authorized keys
-  copy:
-    src: "authorized_keys/{{ user.name }}/{{ inventory_hostname }}"
-    dest: "/home/{{ user.name }}/.ssh/authorized_keys"
-    owner: "{{ user.name }}"
-    group: "{{ user.name }}"
-    mode: 0600
-  tags:
-    - usersetting
-
 - name: Create a local bin directory
   file:
     path: "/home/{{ user.name }}/bin"
