@@ -92,11 +92,11 @@ users:
 DryRun
 
 ```
-ansible-playbook -i inventory --private-key="~/.ssh/your_private_key" -CD webservers.yml --tags user
+ansible-playbook -i inventory --private-key="~/.ssh/your_private_key" -CD webservers.yml --tags usersetting,package
 ```
 
 Apply
 
 ```
-ansible-playbook -i inventory --private-key="~/.ssh/your_private_key" -D webservers.yml --tags user
+ansible-playbook -i inventory --private-key="~/.ssh/your_private_key" -D webservers.yml --tags usersetting,package
 ```
