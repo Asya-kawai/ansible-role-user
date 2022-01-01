@@ -1,9 +1,11 @@
-users:
-  - name: "user"
-    groups:
-      - "sudo"
-      - "wheel"
-    password: "Th1sIsRand0mPassWord!"
+# --- users variable example.
+#
+# users:
+#   - name: "user"
+#     groups:
+#       - "sudo"
+#       - "wheel"
+#     password: "Th1sIsRand0mPassWord!"
 
 # OCaml
 opam_mirror: https://github.com/ocaml/opam/releases/download/
