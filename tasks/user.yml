@@ -2,7 +2,6 @@
   group:
     name: "{{ user.name }}"
     state: present
-  register: create_groups_result
   tags:
     - usersetting
 
@@ -13,8 +12,6 @@
     groups: "{{ user.groups }}"
     append: yes
     password: "{{ user.password | password_hash('sha512') }}"
-  when: create_groups_result is succeeded
-  register: create_users_result
   tags:
     - usersetting
 

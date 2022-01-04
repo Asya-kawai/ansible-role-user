@@ -12,7 +12,7 @@
 - name: Check the user home directory exists
   stat:
     path: "/home/{{ user.name }}"
-  register: user_dir
+  register: user_home_dir
   tags:
     - package
 
@@ -118,7 +118,7 @@
   with_items:
     - .zshrc
     - .zshenv
-  when: user_dir.stat.exists
+  when: user_home_dir.stat.exists
   tags:
     - package
 
