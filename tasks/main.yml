@@ -7,12 +7,26 @@
   tags:
     - usersetting
 
+- name: Update OS package caches
+  apt:
+    update_cache: yes
+  when: ansible_facts['os_family'] == 'Debian'
+  tags:
+    - package
+
+- name: Update OS package caches
+  dnf:
+    update_cache: yes
+  when: ansible_facts['os_family'] == 'RedHat'
+  tags:
+    - package
+
 - name: Update OS packages
   package:
     name: '*'
     state: latest
   tags:
-    - package 
+    - package
 
 - name: Install OS packages
   package:
