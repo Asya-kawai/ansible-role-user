@@ -127,6 +127,7 @@
     creates: "{{ user.home_dir.rstrip('/') }}/.opam"
   register: opam_init_result
   ignore_errors: yes
+  changed_when: false
   when: opam_init and user_bin_dir.stat.exists
   tags:
     - configuration
@@ -159,7 +160,7 @@
 - name: set zsh path
   command: which zsh
   register: zsh_path
-  changed_when: not zsh_path.stdout == ''
+  changed_when: zsh_path.stdout == ''
   tags:
     - configuration
     - user
@@ -187,6 +188,7 @@
 - name: Change the login shell
   command: "chsh -s {{ zsh_path.stdout }} {{ user.name }}"
   when: zsh_path is defined and (zsh_path.stdout | length == 0)
+  changed_when: false
   tags:
     - configuration
     - user
