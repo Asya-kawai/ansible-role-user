@@ -1,0 +1,27 @@
+---
+galaxy_info:
+  namespace: aintek_xyz
+  role_name: user
+  author: Toshiki Kawai
+  company: Aintek.xyz
+  description: Set up user settings on any systems
+  license: MIT
+  min_ansible_version: 2.9.0
+  platforms:
+    - name: Ubuntu
+      versions:
+        - xenial
+        - bionic
+        - focal
+    - name: Debian
+      versions:
+        - jessie
+        - stretch
+        - buster
+    - name: EL
+      versions:
+        - 8
+  galaxy_tags:
+    - system
+    - web
+dependencies: []

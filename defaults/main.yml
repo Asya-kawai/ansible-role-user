@@ -1,18 +1,41 @@
-# --- users variable example.
-#
+---
+users:
+  - name: root
+    groups: []
+    home_dir: /root
+# Users is a list of objects having fields of 'name', 'groups' and 'password'.
+# The exmaple of users variable.
+# ---
 # users:
-#   - name: "user"
+#   - name: 'user'
 #     groups:
-#       - "sudo"
-#       - "wheel"
-#     password: "Th1sIsRand0mPassWord!"
+#       - 'sudo'
+#       - 'wheel'
+#     password: 'Th1sIsRand0mPassWord!'
+#     home_dir: '/home/user'
+
+# Pyenv
+pyenv_repo: https://github.com/pyenv/pyenv.git
+pyenv_version: HEAD
+
+# Rbenv
+rbenv_repo: https://github.com/rbenv/rbenv.git
+rbenv_version: HEAD
+
+# Ruby-build
+ruby_build_repo: https://github.com/rbenv/ruby-build.git
+ruby_build_version: HEAD
+
+# Zsh_settings
+zsh_settings_repo: https://github.com/Asya-kawai/zsh_settings.git
+zsh_settings_dest: /tmp/zsh_settings
+zsh_settings_version: HEAD
 
 # OCaml
 opam_mirror: https://github.com/ocaml/opam/releases/download/
-opam_ver: 2.1.1
-opam_ocaml_ver: 4.12.0
+opam_version: 2.1.1
+opam_ocaml_version: 4.12.0
 opam_platform: x86_64
 opam_os: linux
 
 opam_init: true
-

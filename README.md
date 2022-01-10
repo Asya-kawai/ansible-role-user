@@ -2,6 +2,8 @@
 
 Setup users and install Ruby,Python and OCaml.
 
+And also changes login shell to zsh.
+
 # Examples
 
 Directory tree.
@@ -36,7 +38,7 @@ centos ansible_host=10.10.10.11 ansible_port=22
 
 `all.yml` sets common variables.
 
-```
+```yaml
 # Common settings
 become: yes
 ansible_user: root
@@ -49,9 +51,9 @@ ansible_ssh_private_key_file: ""
 
 `webserver_ubuntu.yml` is `webservers` host's children.
 
-This role refers `users(array)` variable including elements of `name`, `groups(array)` and `password`.
+This role refers `users(array)` variable including elements of `name`, `groups(array)`, `password` and `home_dir`.
 
-```
+```yaml
 ansible_user: ubuntu
 become: yes
 ansible_become_password: 'ThisIsSecret!'
@@ -61,23 +63,25 @@ users:
     groups:
       - sudo
     password: 'ThisIsSecret!'
+    home_dir: /home/aintek
 ```
 
 ## Group Vars / CentOS(webserver_centos.yml)
 
 `webserver_ubuntu.yml` is `webservers` host's children.
 
-```
+```yaml
 users:
   - name: aintek
     groups:
       - wheel
     password: 'ThisIsSecret!'
+    home_dir: /home/aintek
 ```
 
 ## Playbook / Webservers(webservers.yml)
 
-```
+```yaml
 - hosts: webservers
   become: yes
   module_defaults:
@@ -92,11 +96,11 @@ users:
 DryRun
 
 ```
-ansible-playbook -i inventory --private-key="~/.ssh/your_private_key" -CD webservers.yml --tags usersetting,package
+ansible-playbook -i inventory --private-key="~/.ssh/your_private_key" -CD webservers.yml --tags user
 ```
 
 Apply
 
 ```
-ansible-playbook -i inventory --private-key="~/.ssh/your_private_key" -D webservers.yml --tags usersetting,package
+ansible-playbook -i inventory --private-key="~/.ssh/your_private_key" -D webservers.yml --tags user
 ```

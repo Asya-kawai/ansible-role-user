@@ -1,98 +1,138 @@
+---
+- name: Check the user home directory exists
+  stat:
+    path: "{{ user.home_dir.rstrip('/') }}"
+  register: user_home_dir
+  tags:
+    - configuration
+    - user
+    - package
+    - package-check-user-home-directory
+
 - name: Create a local bin directory
   become_user: "{{ user.name }}"
   file:
-    path: "/home/{{ user.name }}/bin"
+    path: "{{ user.home_dir.rstrip('/') }}/bin"
     state: directory
     owner: "{{ user.name }}"
     group: "{{ user.name }}"
     mode: 0755
+  when: user_home_dir.stat.exists
   tags:
+    - configuration
+    - user
     - package
-
-- name: Check the user home directory exists
-  stat:
-    path: "/home/{{ user.name }}"
-  register: user_home_dir
-  tags:
-    - package
+    - package-create-bin-directory
 
 - name: Check the user bin directory exists
   stat:
-    path: "/home/{{ user.name }}/bin"
+    path: "{{ user.home_dir.rstrip('/') }}/bin"
   register: user_bin_dir
   tags:
+    - configuration
+    - user
     - package
+    - package-check-user-bin-directory
+    - package-install-pyenv
+    - package-install-rbenv
+    - package-install-ruby-build
+    - package-download-opam
+    - package-link-opam
+    - package-initialize-opam
+    - package-copy-zsh-settings
 
 - name: Install pyenv
   become_user: "{{ user.name }}"
   git:
-    repo: https://github.com/pyenv/pyenv.git
-    dest: "/home/{{ user.name }}/.pyenv"
+    repo: "{{ pyenv_repo }}"
+    dest: "{{ user.home_dir.rstrip('/') }}/.pyenv"
+    version: "{{ pyenv_version }}"
+  when: user_home_dir.stat.exists
   tags:
+    - configuration
+    - user
     - package
+    - package-install-pyenv
 
 - name: Install rbenv
   become_user: "{{ user.name }}"
   git:
-    repo: https://github.com/rbenv/rbenv.git
-    dest: "/home/{{ user.name }}/.rbenv"
+    repo: "{{ rbenv_repo }}"
+    dest: "{{ user.home_dir.rstrip('/') }}/.rbenv"
+    version: "{{ rbenv_version }}"
+  when: user_home_dir.stat.exists
   tags:
+    - configuration
+    - user
     - package
+    - package-install-rbenv
 
 - name: Install ruby-build
   become_user: "{{ user.name }}"
   git:
-    repo: https://github.com/rbenv/ruby-build.git
-    dest: "/home/{{ user.name }}/.rbenv/plugins/ruby-build"
+    repo: "{{ ruby_build_repo }}"
+    dest: "{{ user.home_dir.rstrip('/') }}/.rbenv/plugins/ruby-build"
+    version: "{{ ruby_build_version }}"
+  when: user_home_dir.stat.exists
   tags:
+    - configuration
+    - user
     - package
+    - package-install-ruby-build
 
 # Reference: https://github.com/andrewrothstein/ansible-opam
 - name: Install opam dependency packages
   package:
     name:
       - bubblewrap
+      - zip
       - unzip
     state: present
   tags:
+    - configuration
+    - user
     - package
+    - package-install-opam-dependencies
 
 - name: Download opam
   become_user: "{{ user.name }}"
   get_url:
-    url: "{{ opam_mirror }}/{{ opam_ver }}/{{ opam_bin }}"
-    dest: "/home/{{ user.name }}/bin"
+    url: "{{ opam_mirror }}/{{ opam_version }}/{{ opam_bin }}"
+    dest: "{{ user.home_dir.rstrip('/') }}/bin"
     mode: 0755
   when: user_bin_dir.stat.exists
   tags:
+    - configuration
+    - user
     - package
+    - package-download-opam
 
 - name: Link the opam target
   become_user: "{{ user.name }}"
   file:
-    src: "/home/{{ user.name }}/bin/{{ opam_bin }}"
-    dest: "/home/{{ user.name }}/bin/opam"
+    src: "{{ user.home_dir.rstrip('/') }}/bin/{{ opam_bin }}"
+    dest: "{{ user.home_dir.rstrip('/') }}/bin/opam"
     state: link
   when: user_bin_dir.stat.exists
   tags:
+    - configuration
+    - user
     - package
+    - package-link-opam
 
 - name: Initialize opam
   become_user: "{{ user.name }}"
-  command: "/home/{{ user.name }}/bin/opam init -y --comp {{ opam_ocaml_ver }}"
+  command: "{{ user.home_dir.rstrip('/') }}/bin/opam init -y --comp {{ opam_ocaml_version }}"
   args:
-    creates: "/home/{{ user.name }}/.opam"
+    creates: "{{ user.home_dir.rstrip('/') }}/.opam"
+  register: opam_init_result
   ignore_errors: yes
   when: opam_init and user_bin_dir.stat.exists
   tags:
+    - configuration
+    - user
     - package
-
-- name: Download zsh setting files
-  git:
-    repo: https://github.com/Asya-kawai/zsh_settings.git
-    dest: /tmp/zsh_settings
-  tags:
-    - package
+    - package-initialize-opam
 
 - name: Install zsh
   package:
@@ -100,30 +140,55 @@
       - zsh
     state: present
   tags:
+    - configuration
+    - user
     - package
+    - package-install-zsh
+
+- name: Download zsh settings
+  git:
+    repo: "{{ zsh_settings_repo }}"
+    dest: "{{ zsh_settings_dest }}"
+    version: "{{ zsh_settings_version }}"
+  tags:
+    - configuration
+    - user
+    - package
+    - package-download-zsh-settings
 
 - name: set zsh path
   command: which zsh
   register: zsh_path
+  changed_when: not zsh_path.stdout == ''
   tags:
+    - configuration
+    - user
     - package
+    - package-set-zsh-path
 
-- name: Copy zsh configurations
+- name: Copy zsh settings
   copy:
     remote_src: yes
     src: "/tmp/zsh_settings/{{ item }}"
-    dest: "/home/{{ user.name }}/{{ item }}"
+    dest: "{{ user.home_dir.rstrip('/') }}/{{ item }}"
     owner: "{{ user.name }}"
     group: "{{ user.name }}"
+    mode: 0644
   with_items:
     - .zshrc
     - .zshenv
   when: user_home_dir.stat.exists
   tags:
+    - configuration
+    - user
     - package
+    - package-copy-zsh-settings
 
 - name: Change the login shell
   command: "chsh -s {{ zsh_path.stdout }} {{ user.name }}"
-  when: zsh_path is defined and zsh_path.stdout != ""
+  when: zsh_path is defined and (zsh_path.stdout | length == 0)
   tags:
+    - configuration
+    - user
     - package
+    - package-change-login-shell

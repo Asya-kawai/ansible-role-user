@@ -1,3 +1,4 @@
+---
 # Reference: https://gitkado.hatenadiary.jp/entry/20190131/1548864167
 - name: Configure users
   include: user.yml
@@ -5,28 +6,34 @@
   loop_control:
     loop_var: user
   tags:
-    - usersetting
+    - user
 
 - name: Update OS package caches for Debian
   apt:
     update_cache: yes
   when: ansible_facts['os_family'] == 'Debian'
   tags:
+    - user
     - package
+    - user-update-os-packages
 
 - name: Update OS package caches for CentOS
   dnf:
     update_cache: yes
   when: ansible_facts['os_family'] == 'RedHat'
   tags:
+    - user
     - package
+    - user-update-os-packages
 
 - name: Update OS packages
   package:
     name: '*'
     state: latest
   tags:
+    - user
     - package
+    - user-update-os-packages
 
 - name: Install OS packages
   package:
@@ -37,12 +44,16 @@
       - zsh
     state: present
   tags:
+    - user
     - package
+    - user-install-os-packages
 
-- name: Install basic packages for local user
+- name: Install basic packages
   include: package.yml
   with_items: "{{ users }}"
   loop_control:
     loop_var: user
   tags:
+    - user
     - package
+    - user-install-basic-packages
