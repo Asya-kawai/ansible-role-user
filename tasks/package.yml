@@ -87,6 +87,9 @@
       - bubblewrap
       - zip
       - unzip
+      - rsync
+      - mercurial
+      - darcs
     state: present
   tags:
     - configuration
