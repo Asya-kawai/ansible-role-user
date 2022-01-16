@@ -91,6 +91,7 @@
       - mercurial
       - darcs
     state: present
+  when: ansible_facts['os_family'] == 'Debian'
   tags:
     - configuration
     - user
@@ -106,6 +107,7 @@
       - rsync
       - mercurial
     state: present
+  when: ansible_facts['os_family'] == 'RedHat'
   tags:
     - configuration
     - user
