@@ -205,9 +205,27 @@
     - package
     - package-copy-zsh-settings
 
+# Reference: https://github.com/Oefenweb/ansible-postfix
+- name: Set a variable to check whether docker guest or not
+  set_fact:
+    is_docker_guest: "{{ (ansible_virtualization_role | default('host') == 'guest') and (ansible_virtualization_type | default('none') == 'docker') }}"
+  tags:
+    - configuration
+    - user
+    - package
+    - package-copy-zsh-settings
+
+# Only Debian-like OS.
+# RedHat in Docker does not work because
+# [Errno 2] No such file or directory:
+#  b'chsh':
+#  b'chsh'",
+#  "rc": 2
 - name: Change the login shell
   command: "chsh -s {{ zsh_path.stdout }} {{ user.name }}"
-  when: zsh_path is defined and (zsh_path.stdout | length > 0)
+  when:
+    - zsh_path is defined and (zsh_path.stdout | length > 0)
+    - not is_docker_guest
   changed_when: false
   tags:
     - configuration
