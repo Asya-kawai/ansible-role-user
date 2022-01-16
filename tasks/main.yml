@@ -48,6 +48,16 @@
     - package
     - user-install-os-packages
 
+- name: Install OS packages for RedHat
+  package:
+    name:
+      - util-linux-user
+  when: ansible_facts['os_family'] == 'RedHat'
+  tags:
+    - user
+    - package
+    - user-install-os-packages
+
 - name: Install basic packages
   include: package.yml
   with_items: "{{ users }}"
