@@ -1,5 +1,7 @@
 # Ansible Role For User Setting
 
+[![CI](https://github.com/Asya-kawai/ansible-role-user/actions/workflows/ci.yml/badge.svg)](https://github.com/Asya-kawai/ansible-role-user/actions/workflows?query=workflow%3ACI)
+
 Setup users and install Ruby,Python and OCaml.
 
 And also changes login shell to zsh.
