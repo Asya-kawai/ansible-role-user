@@ -81,7 +81,7 @@
     - package-install-ruby-build
 
 # Reference: https://github.com/andrewrothstein/ansible-opam
-- name: Install opam dependency packages
+- name: Install opam dependency packages for Debian
   package:
     name:
       - bubblewrap
@@ -90,6 +90,21 @@
       - rsync
       - mercurial
       - darcs
+    state: present
+  tags:
+    - configuration
+    - user
+    - package
+    - package-install-opam-dependencies
+
+- name: Install opam dependency packages for CentOS
+  package:
+    name:
+      - bubblewrap
+      - zip
+      - unzip
+      - rsync
+      - mercurial
     state: present
   tags:
     - configuration
