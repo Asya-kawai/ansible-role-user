@@ -208,7 +208,7 @@
 - name: Change the login shell
   command: "chsh -s {{ zsh_path.stdout }} {{ user.name }}"
   when:
-    - zsh_path is defined and (zsh_path.stdout | length > 0)
+    - zsh_path is defined and (zsh_path.stdout | default('') | length > 0)
   changed_when: false
   tags:
     - configuration
