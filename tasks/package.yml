@@ -166,11 +166,23 @@
     - package
     - package-install-zsh
 
+- name: set git path
+  command: which git
+  register: git_path
+  changed_when: git_path.stdout == ''
+  tags:
+    - configuration
+    - user
+    - package
+    - package-set-git-path
+
 - name: Download zsh settings
   git:
     repo: "{{ zsh_settings_repo }}"
     dest: "{{ zsh_settings_dest }}"
     version: "{{ zsh_settings_version }}"
+  when:
+    - git_path is defined and (git_path.stdout | default('') | length > 0)
   tags:
     - configuration
     - user
