@@ -41,6 +41,40 @@
     - package-initialize-opam
     - package-copy-zsh-settings
 
+- name: Install pyenv dependency packages for Debian
+  package:
+    name:
+      - make
+      - gcc
+      - zlib1g-dev
+      - libbz2-dev
+      - libreadline-dev
+      - libsqlite3-dev
+    state: present
+  when: ansible_facts['os_family'] == 'Debian'
+  tags:
+    - configuration
+    - user
+    - package
+    - package-install-pyenv-dependencies
+
+- name: Install pyenv dependency packages for CentOS
+  package:
+    name:
+      - gcc
+      - zlib-devel
+      - bzip2
+      - bzip2-devel
+      - readline
+      - readline-devel
+    state: present
+  when: ansible_facts['os_family'] == 'RedHat'
+  tags:
+    - configuration
+    - user
+    - package
+    - package-install-pyenv-dependencies
+
 - name: Install pyenv
   become_user: "{{ user.name }}"
   git:
@@ -189,6 +223,16 @@
     - package
     - package-download-zsh-settings
 
+- name: Check the zsh settings directory exists
+  stat:
+    path: "{{ zsh_settings_dest }}"
+  register: zsh_settings_dir
+  tags:
+    - configuration
+    - user
+    - package
+    - package-check-zsh-settings-directory
+
 - name: set zsh path
   command: which zsh
   register: zsh_path
@@ -210,7 +254,9 @@
   with_items:
     - .zshrc
     - .zshenv
-  when: user_home_dir.stat.exists
+  when:
+    - user_home_dir.stat.exists
+    - zsh_settings_dir.stat.exists
   tags:
     - configuration
     - user
