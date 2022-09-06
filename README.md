@@ -106,3 +106,17 @@ Apply
 ```
 ansible-playbook -i inventory --private-key="~/.ssh/your_private_key" -D webservers.yml --tags user
 ```
+
+# Troublesshooting
+
+## Failed to find required executable "git"
+
+When using git module in check mode, you may encount this error such as following.
+
+```
+fatal: [testserver_centos_01]: FAILED! => {"changed": false, "msg": "Failed to find required executable \"git\" in paths: /sbin:/bin:/usr/sbin:/usr/bin:/usr/local/sbin"}
+```
+
+When running check mode, git command may not be found because the server has not installed it yet.
+Also, according to the error message, This is because paths to the git command can not be found when using root user.
+So you can ignore this error and apply ansible-playbook.
