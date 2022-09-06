@@ -33,8 +33,8 @@ zsh_settings_version: HEAD
 
 # OCaml
 opam_mirror: https://github.com/ocaml/opam/releases/download/
-opam_version: 2.1.1
-opam_ocaml_version: 4.12.0
+opam_version: 2.1.3
+opam_ocaml_version: 4.14.0
 opam_platform: x86_64
 opam_os: linux
 
