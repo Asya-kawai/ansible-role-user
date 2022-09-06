@@ -200,7 +200,7 @@
     - package
     - package-install-zsh
 
-- name: set git path
+- name: Set git path
   command: which git
   register: git_path
   changed_when: git_path.stdout == ''
@@ -233,7 +233,7 @@
     - package
     - package-check-zsh-settings-directory
 
-- name: set zsh path
+- name: Set zsh path
   command: which zsh
   register: zsh_path
   changed_when: zsh_path.stdout == ''
