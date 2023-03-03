@@ -44,12 +44,22 @@
 - name: Install pyenv dependency packages for Debian
   package:
     name:
-      - make
       - gcc
+      - make
+      - build-essential
+      - libssl-dev
       - zlib1g-dev
       - libbz2-dev
       - libreadline-dev
       - libsqlite3-dev
+      - curl
+      - libncursesw5-dev
+      - xz-utils
+      - tk-dev
+      - libxml2-dev
+      - libxmlsec1-dev
+      - libffi-dev
+      - liblzma-dev
     state: present
   when: ansible_facts['os_family'] == 'Debian'
   tags:
@@ -62,11 +72,18 @@
   package:
     name:
       - gcc
+      - make
       - zlib-devel
       - bzip2
       - bzip2-devel
       - readline
       - readline-devel
+      - sqlite
+      - qslite-devel
+      - openssl-devel
+      - tk-devel
+      - libffi-devel
+      - xz-devel
     state: present
   when: ansible_facts['os_family'] == 'RedHat'
   tags:
