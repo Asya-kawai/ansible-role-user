@@ -120,3 +120,25 @@ fatal: [testserver_centos_01]: FAILED! => {"changed": false, "msg": "Failed to f
 When running check mode, git command may not be found because the server has not installed it yet.
 Also, according to the error message, This is because paths to the git command can not be found when using root user.
 So you can ignore this error and apply ansible-playbook.
+
+## Not found "mercurial"
+
+When installing mercurial by apt, you may encount this error such as following.
+
+```
+fatal: [testserver_ubuntu_01]: FAILED! => {"changed": false, "msg": "No package matching 'mercurial' is available"}
+fatal: [testserver_centos_01]: FAILED! => {"changed": false, "failures": ["No package mercurial available."], "msg": "Failed to install some of the specified packages", "rc": 1, "results": []}
+```
+
+Before apt update, apt can not find mercurial because the universe repository is disabled.
+So you can ignore this error and apply ansible-playbook.
+
+# How to tests
+
+Start VM instance kind of Ubuntu 18.04, Ubuntu 20.04, Ubuntu 22.04, CentOS7 and CentOS8 and
+run ansible-playbook command such as `ansible-playbook -i inventory -CD playbook.yml --private-key ~/.ssh/your_private_key --tags user`.
+
+## Notes:
+
+* Not support CentOS9
+* We give up on using `molecule` because sometime molecule are broken and don't work correctly.
