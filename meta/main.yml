@@ -10,17 +10,14 @@ galaxy_info:
   platforms:
     - name: Ubuntu
       versions:
-        - xenial
-        - bionic
-        - focal
+        - all
     - name: Debian
       versions:
-        - jessie
-        - stretch
-        - buster
+        - all
     - name: EL
       versions:
-        - all
+        - '7'
+        - '8'
   galaxy_tags:
     - system
     - web
