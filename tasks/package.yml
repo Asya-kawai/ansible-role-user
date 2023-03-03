@@ -79,7 +79,7 @@
       - readline
       - readline-devel
       - sqlite
-      - qslite-devel
+      - sqlite-devel
       - openssl-devel
       - tk-devel
       - libffi-devel
@@ -92,13 +92,25 @@
     - package
     - package-install-pyenv-dependencies
 
+- name: Set git path
+  command: which git
+  register: git_path
+  changed_when: git_path.stdout == ''
+  tags:
+    - configuration
+    - user
+    - package
+    - package-set-git-path
+
 - name: Install pyenv
   become_user: "{{ user.name }}"
   git:
     repo: "{{ pyenv_repo }}"
     dest: "{{ user.home_dir.rstrip('/') }}/.pyenv"
     version: "{{ pyenv_version }}"
-  when: user_home_dir.stat.exists
+  when:
+    - user_home_dir.stat.exists
+    - git_path is defined and (git_path.stdout | default('') | length > 0)
   tags:
     - configuration
     - user
@@ -111,7 +123,9 @@
     repo: "{{ rbenv_repo }}"
     dest: "{{ user.home_dir.rstrip('/') }}/.rbenv"
     version: "{{ rbenv_version }}"
-  when: user_home_dir.stat.exists
+  when:
+    - user_home_dir.stat.exists
+    - git_path is defined and (git_path.stdout | default('') | length > 0)
   tags:
     - configuration
     - user
@@ -124,7 +138,9 @@
     repo: "{{ ruby_build_repo }}"
     dest: "{{ user.home_dir.rstrip('/') }}/.rbenv/plugins/ruby-build"
     version: "{{ ruby_build_version }}"
-  when: user_home_dir.stat.exists
+  when:
+    - user_home_dir.stat.exists
+    - git_path is defined and (git_path.stdout | default('') | length > 0)
   tags:
     - configuration
     - user
@@ -216,16 +232,6 @@
     - user
     - package
     - package-install-zsh
-
-- name: Set git path
-  command: which git
-  register: git_path
-  changed_when: git_path.stdout == ''
-  tags:
-    - configuration
-    - user
-    - package
-    - package-set-git-path
 
 - name: Download zsh settings
   git:
