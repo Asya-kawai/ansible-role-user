@@ -46,7 +46,18 @@ jobs:
           sed -i -e "s/\(opam_version:\).*/\1 ${{ steps.latest-version.outputs.name }}/" defaults/main.yml
           git add defaults/main.yml
 
+      - name: Push the new branch
+        if: steps.create-branch.outcome == 'success'
+        run: |
+          git push -u origin feat/$TITLE
+
       - name: Create a new PR
+        id: create-pr
         if: steps.create-branch.outcome == 'success'
         run: |
           gh pr create -B main -t $TITLE -b "Updates latest version ${{ steps.latest-version.outputs.name }}"
+
+      - name: Delete remote branch if failed to creat PR
+        if: steps.create-pr.outcome == 'failure'
+        run: |
+          git push origin --delete feat/$TITLE
