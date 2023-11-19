@@ -39,6 +39,8 @@ jobs:
         if: steps.was-created.outputs.count == 0
         run: |
           git switch -c feat/$TITLE
+          git config --global user.name "Asya-kawai"
+          git config --global user.email "kawai-toshiki@aintek.xyz"
 
       - name: Update and added to the new branch when current version is old
         if: steps.create-branch.outcome == 'success'
