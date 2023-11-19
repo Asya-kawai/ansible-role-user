@@ -43,7 +43,7 @@ jobs:
       - name: Update and added to the new branch when current version is old
         if: steps.create-branch.outcome == 'success'
         run: |
-          sed -i -e "s/\(opam_version:\).*/\1 ${{ tag_name }}/" defaults/main.yml
+          sed -i -e "s/\(opam_version:\).*/\1 ${{ steps.latest-version.outputs.name }}/" defaults/main.yml
           git add defaults/main.yml
 
       - name: Push the new branch
