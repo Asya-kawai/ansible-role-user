@@ -10,6 +10,7 @@
     - package-check-user-home-directory
 
 - name: Create a local bin directory
+  become: yes
   become_user: "{{ user.name }}"
   file:
     path: "{{ user.home_dir.rstrip('/') }}/bin"
@@ -103,6 +104,7 @@
     - package-set-git-path
 
 - name: Install pyenv
+  become: yes
   become_user: "{{ user.name }}"
   git:
     repo: "{{ pyenv_repo }}"
@@ -118,6 +120,7 @@
     - package-install-pyenv
 
 - name: Install rbenv
+  become: yes
   become_user: "{{ user.name }}"
   git:
     repo: "{{ rbenv_repo }}"
@@ -133,6 +136,7 @@
     - package-install-rbenv
 
 - name: Install ruby-build
+  become: yes
   become_user: "{{ user.name }}"
   git:
     repo: "{{ ruby_build_repo }}"
@@ -182,6 +186,7 @@
     - package-install-opam-dependencies
 
 - name: Download opam
+  become: yes
   become_user: "{{ user.name }}"
   get_url:
     url: "{{ opam_mirror }}/{{ opam_version }}/{{ opam_bin }}"
@@ -195,6 +200,7 @@
     - package-download-opam
 
 - name: Link the opam target
+  become: yes
   become_user: "{{ user.name }}"
   file:
     src: "{{ user.home_dir.rstrip('/') }}/bin/{{ opam_bin }}"
@@ -208,6 +214,7 @@
     - package-link-opam
 
 - name: Initialize opam
+  become: yes
   become_user: "{{ user.name }}"
   command: "{{ user.home_dir.rstrip('/') }}/bin/opam init -y --comp {{ opam_ocaml_version }}"
   args:
