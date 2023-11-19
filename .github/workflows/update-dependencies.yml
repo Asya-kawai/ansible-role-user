@@ -1,0 +1,57 @@
+---
+name: Update dependencies
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: 0 22 * * 1
+
+jobs:
+  update:
+    name: update-to-latest
+    runs-on: ubuntu-latest
+    env:
+      TITLE: update-opam-verison
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - name: Check out the codebase
+        uses: actions/checkout@v3
+
+      - name: Get the latest opam version
+        id: latest-version
+        run: |
+          echo "name=$(curl https://api.github.com/repos/ocaml/opam/releases/latest | jq .tag_name -r)" >> $GITHUB_OUTPUT
+
+      - name: Diff the current version and latest
+        id: version-diff
+        run: |
+          [ ${{ steps.latest-version.outputs.name }} = $(grep opam_version defaults/main.yml | awk '{print $2}') ] &&
+          echo "result=isSame" >> $GITHUB_OUTPUT ||
+          echo "result=isNotSame" >> $GITHUB_OUTPUT
+
+      - name: Check PR already created
+        id: was-created
+        if: steps.version-diff.outputs.result == 'isNotSame'
+        run: |
+          echo "count=$(gh pr list -S $TITLE' in:title' | wc -l)"
+
+      - name: Create a new branch
+        id: create-branch
+        if: steps.was-created.outputs.count == 0
+        run: |
+          git switch -c feat/$TITLE
+
+      - name: Update and added to the new branch when current version is old
+        if: steps.create-branch.outcome == 'success'
+        run: |
+          sed -i -e "s/\(opam_version:\).*/\1 ${{ tag_name }}/" defaults/main.yml
+          git add defaults/main.yml
+
+      - name: Push the new branch
+        if: steps.create-branch.outcome == 'success'
+        run: |
+          git push -u origin feat/$TITLE
+
+      - name: Create a new PR
+        if: steps.create-branch.outcome == 'success'
+        run: |
+          gh pr craete -B main -t $TITLE -b "Updates latest version ${{ steps.latest-version.outputs.name }}"
