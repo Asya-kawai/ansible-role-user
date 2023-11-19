@@ -45,6 +45,7 @@ jobs:
         run: |
           sed -i -e "s/\(opam_version:\).*/\1 ${{ steps.latest-version.outputs.name }}/" defaults/main.yml
           git add defaults/main.yml
+          git commit "Updates opam version to ${{ steps.latest-version.outputs.name }}"
 
       - name: Push the new branch
         if: steps.create-branch.outcome == 'success'
@@ -55,7 +56,8 @@ jobs:
         id: create-pr
         if: steps.create-branch.outcome == 'success'
         run: |
-          gh pr create -B main -t $TITLE -b "Updates latest version ${{ steps.latest-version.outputs.name }}"
+          gh pr create -B main -t $TITLE -b "Updates opam version to ${{ steps.latest-version.outputs.name }}"
+        continue-on-error: true
 
       - name: Delete remote branch if failed to creat PR
         if: steps.create-pr.outcome == 'failure'
