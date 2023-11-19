@@ -43,20 +43,20 @@ jobs:
           git config --global user.email "kawai-toshiki@aintek.xyz"
 
       - name: Update and added to the new branch when current version is old
-        if: steps.create-branch.outcome == 'success'
+        if: steps.version-diff.outputs.result == 'isNotSame' && steps.was-created.outputs.count == 0
         run: |
           sed -i -e "s/\(opam_version:\).*/\1 ${{ steps.latest-version.outputs.name }}/" defaults/main.yml
           git add defaults/main.yml
           git commit -m "Updates opam version to ${{ steps.latest-version.outputs.name }}"
 
       - name: Push the new branch
-        if: steps.create-branch.outcome == 'success'
+        if: steps.version-diff.outputs.result == 'isNotSame' && steps.was-created.outputs.count == 0
         run: |
           git push -u origin feat/$TITLE
 
       - name: Create a new PR
         id: create-pr
-        if: steps.create-branch.outcome == 'success'
+        if: steps.version-diff.outputs.result == 'isNotSame' && steps.was-created.outputs.count == 0
         run: |
           gh pr create -B main -t $TITLE -b "Updates opam version to ${{ steps.latest-version.outputs.name }}"
         continue-on-error: true
