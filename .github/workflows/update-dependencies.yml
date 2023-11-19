@@ -32,7 +32,7 @@ jobs:
         id: was-created
         if: steps.version-diff.outputs.result == 'isNotSame'
         run: |
-          echo "count=$(gh pr list -S $TITLE' in:title' | wc -l)"
+          echo "count=$(gh pr list -S $TITLE' in:title' | wc -l)" >> $GITHUB_OUTPUT
 
       - name: Create a new branch
         id: create-branch
