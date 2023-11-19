@@ -45,7 +45,7 @@ jobs:
         run: |
           sed -i -e "s/\(opam_version:\).*/\1 ${{ steps.latest-version.outputs.name }}/" defaults/main.yml
           git add defaults/main.yml
-          git commit "Updates opam version to ${{ steps.latest-version.outputs.name }}"
+          git commit -m "Updates opam version to ${{ steps.latest-version.outputs.name }}"
 
       - name: Push the new branch
         if: steps.create-branch.outcome == 'success'
