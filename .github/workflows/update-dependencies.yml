@@ -10,8 +10,8 @@ jobs:
     name: update-to-latest
     runs-on: ubuntu-latest
     env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       TITLE: update-opam-verison
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
       - name: Check out the codebase
         uses: actions/checkout@v3
