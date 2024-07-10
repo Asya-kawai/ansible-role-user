@@ -38,4 +38,4 @@ opam_ocaml_version: 5.0.0
 opam_platform: x86_64
 opam_os: linux
 
-opam_init: true
+opam_init: false
