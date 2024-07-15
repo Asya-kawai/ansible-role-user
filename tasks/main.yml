@@ -48,10 +48,22 @@
     - package
     - user-install-os-packages
 
+- name: Install OS packages for Debian
+  package:
+    name:
+      - language-pack-ja-base
+      - language-pack-ja
+  when: ansible_facts['os_family'] == 'Debian'
+  tags:
+    - user
+    - package
+    - user-install-os-packages
+
 - name: Install OS packages for RedHat
   package:
     name:
       - util-linux-user
+      - glibc-langpack-ja
   when: ansible_facts['os_family'] == 'RedHat'
   tags:
     - user
