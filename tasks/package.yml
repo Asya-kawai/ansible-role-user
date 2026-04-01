@@ -215,6 +215,7 @@
     src: "{{ user.home_dir.rstrip('/') }}/bin/{{ opam_bin }}"
     dest: "{{ user.home_dir.rstrip('/') }}/bin/opam"
     state: link
+    force: yes
   when:
     - user_bin_dir.stat.exists
     - opam_bin.stat.exists
