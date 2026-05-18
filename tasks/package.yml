@@ -201,7 +201,7 @@
 - name: Check the opam binary exists
   stat:
     path: "{{ user.home_dir.rstrip('/') }}/bin/{{ opam_bin }}"
-  register: opam_bin
+  register: opam_bin_stat
   tags:
     - configuration
     - user
@@ -218,7 +218,7 @@
     force: yes
   when:
     - user_bin_dir.stat.exists
-    - opam_bin.stat.exists
+    - opam_bin_stat.stat.exists
   tags:
     - configuration
     - user

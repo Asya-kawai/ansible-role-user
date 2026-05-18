@@ -1,0 +1,21 @@
+# Ansible/role test artifacts
+playbook*.yml
+inventory*
+roles/
+*.tar.gz
+*.retry
+!.ansible-lint
+.ansible*
+*.log
+tmp/
+test-output/
+__pycache__/
+*.pyc
+# VSCode/Editor
+.vscode/
+.idea/
+# OS/Editor
+.DS_Store
+Thumbs.db
+id_backup_server
+id_backup_server.pub
